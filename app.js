@@ -32,8 +32,8 @@ async function showIndex(index,{remember=false}={}){
  const previous=state.current;if(remember&&previous>=0&&previous!==index)state.history.push(previous);
  $('player').pause();clearURL();state.current=index;
  const available=index>=0&&index<state.videos.length;
- $('previousBtn').disabled=!state.history.length;$('restartBtn').disabled=!available;$('nextBtn').disabled=!available;$('saveBtn').disabled=!available;$('comments').disabled=!available;
- $('player').style.display=available?'block':'none';$('videoPlaceholder').classList.toggle('hidden',available);
+ $('previousBtn').disabled=!state.history.length;$('restartBtn').disabled=!available;$('playPauseBtn').disabled=!available;$('nextBtn').disabled=!available;$('saveBtn').disabled=!available;$('comments').disabled=!available;
+ $('player').style.display=available?'block':'none';$('playPauseBtn').textContent='▶ Reproduzir';$('videoPlaceholder').classList.toggle('hidden',available);
  if(!available){$('player').removeAttribute('src');$('player').load();$('filename').textContent='Nenhum vídeo pendente';$('position').textContent='—';$('comments').value='';$('savedTag').textContent='—';$('videoPlaceholder').textContent=state.videos.length?'Não há vídeos pendentes.':'Selecione um diretório para visualizar o primeiro vídeo pendente.';return;}
  const name=state.videos[index];$('filename').textContent=name;$('position').textContent=`${index+1} de ${state.videos.length}`;$('savedTag').textContent=state.done.has(name)?'Já analisado':'Não salvo';$('comments').value='Carregando comentário...';
  try{const file=await (await state.folder.getFileHandle(name)).getFile();if(state.current!==index)return;state.objectURL=URL.createObjectURL(file);$('player').src=state.objectURL;$('player').load();const comment=await getComment(name);if(state.current===index)$('comments').value=comment;}
@@ -55,6 +55,10 @@ $('previousBtn').addEventListener('click',goPrevious);
 $('nextBtn').addEventListener('click',goNext);
 $('resetBtn').addEventListener('click',reset);
 $('restartBtn').addEventListener('click',()=>{$('player').currentTime=0;$('player').play().catch(()=>{});});
+$('playPauseBtn').addEventListener('click',()=>{const video=$('player');if(video.paused){video.play().catch(e=>status('Não foi possível reproduzir: '+e.message,'bad'));}else{video.pause();}});
+$('player').addEventListener('play',()=>{$('playPauseBtn').textContent='⏸ Pausar';});
+$('player').addEventListener('pause',()=>{$('playPauseBtn').textContent='▶ Reproduzir';});
+$('player').addEventListener('ended',()=>{$('playPauseBtn').textContent='▶ Reproduzir';});
 $('saveBtn').addEventListener('click',saveComment);
 $('logoutBtn').addEventListener('click',logout);
 window.addEventListener('beforeunload',clearURL);
