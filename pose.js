@@ -22,6 +22,10 @@ let frameCallbackId = 0;
 let lastDetectionAt = -Infinity;
 let lastTime = NaN;
 let generation = 0;
+let initialFrameTimer = 0;
+let preparedSource = '';
+let preparingSource = '';
+
 
 function setState(message, label = 'Aguardando') {
   tag.textContent = label;
@@ -151,34 +155,69 @@ function scheduleFrame() {
     });
   }
 }
+// A análise do quadro inicial não depende de Play. Aguarda um frame realmente
+// decodificado, inclusive se o MediaPipe carregar antes do vídeo estar pronto.
+function analyzeInitialFrame(id, attempt = 0) {
+  clearTimeout(initialFrameTimer);
+  if (id !== generation || !video.currentSrc || !active) return;
+  if (canProcess()) {
+    // Espera a atualização visual do elemento <video> antes de ler os pixels.
+    requestAnimationFrame(() => {
+      if (id !== generation || !active || !canProcess()) return;
+      processFrame(true);
+      if (!video.paused && !video.ended) scheduleFrame();
+    });
+    return;
+  }
+  if (attempt < 100) {
+    initialFrameTimer = setTimeout(() => analyzeInitialFrame(id, attempt + 1), 100);
+  } else {
+    setState('O vídeo abriu, mas o primeiro quadro ainda não está disponível para análise.', 'Aguardando');
+  }
+}
 async function prepareVideo() {
+  const source = video.currentSrc;
+  if (!source) return;
+  // loadedmetadata, loadeddata e canplay podem ocorrer para o mesmo vídeo.
+  // Só inicializamos uma vez por fonte; os eventos posteriores tentam o frame.
+  if (preparingSource === source || preparedSource === source) {
+    if (active) analyzeInitialFrame(generation);
+    return;
+  }
   const id = ++generation;
+  preparingSource = source;
   cancelFrame();
+  clearTimeout(initialFrameTimer);
   active = false;
   lastTime = NaN;
   lastDetectionAt = -Infinity;
-  if (!video.currentSrc || !video.videoWidth) return;
-  sizeCanvas();
-  clearPose('Preparando a detecção de pose...');
+  clearPose('Preparando a detecção de pose do primeiro quadro...');
   try {
     await loadDetector();
-    if (id !== generation || !video.currentSrc) return;
+    if (id !== generation || video.currentSrc !== source) return;
     active = true;
-    processFrame(true);
-    scheduleFrame();
-  } catch (_) { /* O erro já foi mostrado. */ }
+    preparedSource = source;
+    setState('Analisando o primeiro quadro, mesmo com o vídeo pausado...', 'Detectando');
+    analyzeInitialFrame(id);
+  } catch (_) { /* loadDetector já apresenta o erro. */ }
+  finally { if (preparingSource === source) preparingSource = ''; }
 }
 function resetPose() {
   generation++;
   active = false;
   cancelFrame();
+  clearTimeout(initialFrameTimer);
+  preparingSource = '';
+  preparedSource = '';
   lastTime = NaN;
   lastDetectionAt = -Infinity;
   setState('Pose corporal — articulações e ligações.', 'Aguardando');
   clearPose();
 }
 window.addEventListener('getinoxy:videochange', resetPose);
+video.addEventListener('loadedmetadata', prepareVideo);
 video.addEventListener('loadeddata', prepareVideo);
+video.addEventListener('canplay', prepareVideo);
 video.addEventListener('play', () => {
   if (active) { processFrame(true); scheduleFrame(); }
 });

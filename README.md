@@ -24,3 +24,9 @@ O módulo MediaPipe agora é importado explicitamente de `vision_bundle.mjs`, co
 O Console da versão anterior indicou HTTP 404 ao importar `@mediapipe/tasks-vision@0.10.22/vision_bundle.mjs`. A versão 04.2 utiliza `@mediapipe/tasks-vision@0.10.21` pela entrada principal do pacote e carrega `wasm` da mesma versão. Esta correção elimina o caminho que retornou 404, mas o funcionamento deve ser validado no Chrome com seu vídeo.
 
 Após substituir os arquivos, use Ctrl+Shift+R. Em caso de falha, abra F12 > Console e envie a mensagem completa.
+
+## Atualização v04.3 — Primeiro quadro sem Play
+
+Ao selecionar um vídeo MP4, a janela **Articulações** já analisa e exibe o esqueleto sobre o **primeiro quadro parado**, antes de clicar em Reproduzir. A inicialização começa em `loadedmetadata` e espera que o quadro esteja decodificado (`HAVE_CURRENT_DATA`), até 10 segundos. O quadro inicial é detectado mesmo com `video.paused === true`. Permanecem os tratamentos de Play, Pause, busca temporal e troca de vídeo. O parâmetro `?v=043` no script evita reutilizar uma cópia antiga do `pose.js` do cache do navegador.
+
+Se a detecção do primeiro quadro não localizar uma pessoa (por oclusão ou enquadramento), o sistema mostra **Sem pose**. Isso não é necessariamente falha do MediaPipe.
