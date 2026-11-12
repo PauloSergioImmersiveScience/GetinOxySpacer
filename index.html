@@ -20,7 +20,7 @@
         <p id="loginError" class="error" aria-live="polite"></p>
         <button class="btn primary full" type="submit">Entrar na plataforma</button>
       </form>
-      <small>Versão 03 · Acesso demonstrativo (não substitui autenticação segura)</small>
+      <small>Versão 04 · Acesso demonstrativo (não substitui autenticação segura)</small>
     </div>
   </section>
 
@@ -31,7 +31,7 @@
         <div>
           <p class="eyebrow">GETINOXY · ANÁLISE VISUAL</p>
           <h1>Analisador de Imagem GetinOxySpacer</h1>
-          <p>Plataforma para análise visual de vídeos do uso de espaçadores. <span>Versão: 03</span></p>
+          <p>Plataforma para análise visual de vídeos do uso de espaçadores. <span>Versão: 04</span></p>
         </div>
       </div>
       <button id="logoutBtn" class="btn subtle">Sair</button>
@@ -51,22 +51,35 @@
       </div>
       <p id="status" class="status" role="status" aria-live="polite">Selecione uma pasta com arquivos MP4 para iniciar.</p>
 
-      <section class="panel video-panel" aria-labelledby="videoTitle">
-        <div class="section-heading">
-          <div><p class="eyebrow">REVISÃO DE VÍDEOS</p><h2 id="videoTitle">Vídeo Analisado</h2></div>
-          <span id="position" class="tag">—</span>
+      <section class="media-grid" aria-label="Análise visual sincronizada">
+        <div class="panel video-panel" aria-labelledby="videoTitle">
+          <div class="section-heading">
+            <div><p class="eyebrow">REVISÃO DE VÍDEOS</p><h2 id="videoTitle">Vídeo Analisado</h2></div>
+            <span id="position" class="tag">—</span>
+          </div>
+          <div class="video-wrap">
+            <video id="player" controls playsinline preload="metadata"></video>
+            <div id="videoPlaceholder" class="video-placeholder">Selecione um diretório para visualizar o primeiro vídeo pendente.</div>
+          </div>
+          <p id="filename" class="filename">Nenhum arquivo carregado</p>
         </div>
-        <div class="video-wrap">
-          <video id="player" controls playsinline preload="metadata"></video>
-          <div id="videoPlaceholder" class="video-placeholder">Selecione um diretório para visualizar o primeiro vídeo pendente.</div>
-        </div>
-        <p id="filename" class="filename">Nenhum arquivo carregado</p>
-        <div class="video-actions">
-          <button id="playPauseBtn" class="btn primary" disabled>▶ Reproduzir</button>
-          <button id="restartBtn" class="btn secondary" disabled>↺ Reiniciar vídeo</button>
-          <button id="nextBtn" class="btn secondary" disabled>Próximo vídeo →</button>
+        <div class="panel pose-panel" aria-labelledby="poseTitle">
+          <div class="section-heading">
+            <div><p class="eyebrow">ESTIMATIVA DE POSE</p><h2 id="poseTitle">Articulações</h2></div>
+            <span id="poseTag" class="tag">Aguardando</span>
+          </div>
+          <div class="video-wrap pose-wrap">
+            <canvas id="poseCanvas" aria-label="Desenho das articulações e suas conexões"></canvas>
+            <div id="posePlaceholder" class="video-placeholder">Carregue um vídeo para detectar as articulações.</div>
+          </div>
+          <p class="filename" id="poseInfo">Pose corporal — articulações e ligações.</p>
         </div>
       </section>
+      <div class="video-actions">
+        <button id="playPauseBtn" class="btn primary" disabled>▶ Reproduzir</button>
+        <button id="restartBtn" class="btn secondary" disabled>↺ Reiniciar vídeo</button>
+        <button id="nextBtn" class="btn secondary" disabled>Próximo vídeo →</button>
+      </div>
 
       <section class="panel comments-panel" aria-labelledby="commentTitle">
         <div class="section-heading"><div><p class="eyebrow">REGISTRO DA ANÁLISE</p><h2 id="commentTitle">Comentários</h2></div><span id="savedTag" class="tag">Não salvo</span></div>
@@ -78,5 +91,6 @@
     </main>
   </div>
   <script src="app.js" defer></script>
+  <script type="module" src="pose.js"></script>
 </body>
 </html>

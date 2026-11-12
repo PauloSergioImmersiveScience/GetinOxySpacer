@@ -48,7 +48,7 @@ async function saveComment(){if(state.current<0||!state.folder)return;const inde
 async function goNext(){if(state.current<0)return;const next=nextPending(state.current);if(next<0){await showIndex(-1,{remember:true});status('Todos os vídeos já foram analisados.','good');}else{await showIndex(next,{remember:true});status('Vídeo pendente carregado.');}}
 async function goPrevious(){if(!state.history.length)return;const index=state.history.pop();await showIndex(index);status('Retorno ao vídeo anterior.');}
 async function reset(){state.history=[];await showIndex(-1);counters();status('Tela inicial restaurada. Clique em Local DataSet para selecionar a pasta e retomar os vídeos pendentes.');}
-function logout(){$('appScreen').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('password').value='';$('player').pause();clearURL();state.folder=null;state.videos=[];state.done=new Set();state.current=-1;state.history=[];$('password').focus();}
+function logout(){$('appScreen').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('password').value='';$('player').pause();clearURL();window.dispatchEvent(new Event('getinoxy:videochange'));state.folder=null;state.videos=[];state.done=new Set();state.current=-1;state.history=[];$('password').focus();}
 $('loginForm').addEventListener('submit',e=>{e.preventDefault();if($('password').value===DEMO_PASSWORD){$('loginError').textContent='';$('loginScreen').classList.add('hidden');$('appScreen').classList.remove('hidden');$('password').value='';}else{$('loginError').textContent='Senha incorreta.';$('password').select();}});
 $('datasetBtn').addEventListener('click',selectDataset);
 $('previousBtn').addEventListener('click',goPrevious);

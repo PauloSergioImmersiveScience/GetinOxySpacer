@@ -5,3 +5,14 @@
 .video-wrap video{position:static;display:none;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;min-width:0;min-height:0}
 .video-actions{flex-wrap:wrap;margin-top:12px}
 @media(max-width:650px){.video-wrap{height:min(65vh,520px);min-height:220px}.video-actions .btn{flex:1 1 auto}}
+
+/* v04: duas janelas simétricas, com canvas sincronizado ao vídeo. */
+.media-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:stretch;margin-top:22px}
+.media-grid .panel{margin-top:0;min-width:0;display:flex;flex-direction:column}
+.media-grid .video-wrap{height:clamp(250px,36vw,440px);min-height:250px;flex-shrink:0}
+.media-grid .filename{margin-top:auto;padding-top:12px}
+.pose-wrap canvas{display:none;width:100%;height:100%;object-fit:contain}
+.pose-wrap{background:#07111d}
+.video-actions{margin:14px 0 0;justify-content:flex-end}
+#poseTag{white-space:nowrap}
+@media(max-width:800px){.media-grid{grid-template-columns:1fr}.media-grid .video-wrap{height:min(56vw,440px);min-height:230px}}
