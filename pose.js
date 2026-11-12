@@ -6,9 +6,9 @@ const placeholder = document.getElementById('posePlaceholder');
 const tag = document.getElementById('poseTag');
 const info = document.getElementById('poseInfo');
 
-const VERSION = '0.10.22';
+const VERSION = '0.10.21';
 const PACKAGE = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${VERSION}`;
-const MODULE_URL = `${PACKAGE}/vision_bundle.mjs`; // Entrada ES Module oficial do pacote.
+const MODULE_URL = PACKAGE; // A entrada principal do pacote resolve o módulo compatível no jsDelivr.
 const MODEL = 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task';
 const MIN_INTERVAL_MS = 65; // Reduz bloqueio da interface em máquinas mais lentas.
 const MIN_VISIBILITY = 0.35;
@@ -47,7 +47,9 @@ async function loadDetector() {
   setState('Baixando o MediaPipe e o modelo de pose (somente na primeira vez)...', 'Carregando');
   placeholder.textContent = 'Carregando modelo de detecção de pose...';
   detectorPromise = (async () => {
-    const { FilesetResolver, PoseLandmarker } = await import(MODULE_URL);
+    const imported = await import(MODULE_URL);
+    const { FilesetResolver, PoseLandmarker } = imported.FilesetResolver ? imported : (imported.default || {});
+    if (!FilesetResolver || !PoseLandmarker) throw new Error('MediaPipe carregado, mas suas classes não foram exportadas pelo módulo.');
     PoseLandmarkerClass = PoseLandmarker;
     const vision = await FilesetResolver.forVisionTasks(`${PACKAGE}/wasm`);
     const options = delegate => ({

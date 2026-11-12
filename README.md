@@ -18,3 +18,9 @@ Substitua na raiz do repositório os arquivos `index.html`, `styles.css`, `app.j
 ## Correção 04.1 (MediaPipe)
 
 O módulo MediaPipe agora é importado explicitamente de `vision_bundle.mjs`, como recomenda a documentação oficial. A interface apresenta o detalhe da falha de inicialização caso o CDN, WASM ou modelo não estejam acessíveis. Dependência de internet na primeira carga.
+
+## Correção v04.2 (carregamento do MediaPipe)
+
+O Console da versão anterior indicou HTTP 404 ao importar `@mediapipe/tasks-vision@0.10.22/vision_bundle.mjs`. A versão 04.2 utiliza `@mediapipe/tasks-vision@0.10.21` pela entrada principal do pacote e carrega `wasm` da mesma versão. Esta correção elimina o caminho que retornou 404, mas o funcionamento deve ser validado no Chrome com seu vídeo.
+
+Após substituir os arquivos, use Ctrl+Shift+R. Em caso de falha, abra F12 > Console e envie a mensagem completa.
