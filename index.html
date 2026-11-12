@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10243b">
+  <title>GetinOxySpacer — Analisador de Vídeos</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <section id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <div class="brand-icon" aria-hidden="true">GO</div>
+      <p class="eyebrow">GETINOXY · ESPAÇADOR INTELIGENTE</p>
+      <h1>GetinOxySpacer</h1>
+      <p class="muted">Plataforma para análise visual de vídeos do uso de espaçadores.</p>
+      <form id="loginForm">
+        <label for="password">Senha de entrada</label>
+        <input id="password" type="password" required autocomplete="off" placeholder="Digite a senha" autofocus>
+        <p id="loginError" class="error" aria-live="polite"></p>
+        <button class="btn primary full" type="submit">Entrar na plataforma</button>
+      </form>
+      <small>Versão 02 · Acesso demonstrativo (não substitui autenticação segura)</small>
+    </div>
+  </section>
+
+  <div id="appScreen" class="app-screen hidden">
+    <header class="site-header">
+      <div class="header-main">
+        <div class="brand-icon small" aria-hidden="true">GO</div>
+        <div>
+          <p class="eyebrow">GETINOXY · ANÁLISE VISUAL</p>
+          <h1>Analisador de Imagem GetinOxySpacer</h1>
+          <p>Plataforma para análise visual de vídeos do uso de espaçadores. <span>Versão: 02</span></p>
+        </div>
+      </div>
+      <button id="logoutBtn" class="btn subtle">Sair</button>
+    </header>
+
+    <main class="container">
+      <nav class="toolbar" aria-label="Ações principais">
+        <button id="datasetBtn" class="btn primary">📁 Local DataSet</button>
+        <button id="previousBtn" class="btn secondary" disabled>← Passo Anterior</button>
+        <button id="resetBtn" class="btn secondary">↺ Restaurar Início</button>
+      </nav>
+
+      <div class="info-strip">
+        <span id="datasetName">Nenhuma pasta selecionada</span>
+        <span id="counter">0 vídeos</span>
+        <span id="completed">0 analisados</span>
+      </div>
+      <p id="status" class="status" role="status" aria-live="polite">Selecione uma pasta com arquivos MP4 para iniciar.</p>
+
+      <section class="panel video-panel" aria-labelledby="videoTitle">
+        <div class="section-heading">
+          <div><p class="eyebrow">REVISÃO DE VÍDEOS</p><h2 id="videoTitle">Vídeo Analisado</h2></div>
+          <span id="position" class="tag">—</span>
+        </div>
+        <div class="video-wrap">
+          <video id="player" controls playsinline preload="metadata"></video>
+          <div id="videoPlaceholder" class="video-placeholder">Selecione um diretório para visualizar o primeiro vídeo pendente.</div>
+        </div>
+        <p id="filename" class="filename">Nenhum arquivo carregado</p>
+        <div class="video-actions">
+          <button id="restartBtn" class="btn secondary" disabled>↺ Reiniciar vídeo</button>
+          <button id="nextBtn" class="btn secondary" disabled>Próximo vídeo →</button>
+        </div>
+      </section>
+
+      <section class="panel comments-panel" aria-labelledby="commentTitle">
+        <div class="section-heading"><div><p class="eyebrow">REGISTRO DA ANÁLISE</p><h2 id="commentTitle">Comentários</h2></div><span id="savedTag" class="tag">Não salvo</span></div>
+        <label class="sr-only" for="comments">Comentários sobre o vídeo</label>
+        <textarea id="comments" rows="6" placeholder="Digite aqui suas observações sobre o vídeo selecionado..." disabled></textarea>
+        <div class="comment-actions"><p>O comentário será salvo como <strong>Comentarios/NOME_DO_VIDEO.txt</strong>.</p><button id="saveBtn" class="btn primary" disabled>Enviar Comentário</button></div>
+      </section>
+      <footer>Arquivos e comentários permanecem na pasta local selecionada. Nada é enviado ao GitHub.</footer>
+    </main>
+  </div>
+  <script src="app.js" defer></script>
+</body>
+</html>
