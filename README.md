@@ -14,3 +14,7 @@ Substitua na raiz do repositório os arquivos `index.html`, `styles.css`, `app.j
 - Esta etapa detecta corpo e conexões, **não classifica movimentos** nem avalia a técnica de utilização do espaçador.
 - A senha no JavaScript continua sendo **somente demonstrativa**; não protege conteúdo privado contra quem inspecione o código publicado.
 - Utilizar Chrome ou Edge atualizado em HTTPS para acesso aos vídeos locais via seletor de diretório.
+
+## Correção 04.1 (MediaPipe)
+
+O módulo MediaPipe agora é importado explicitamente de `vision_bundle.mjs`, como recomenda a documentação oficial. A interface apresenta o detalhe da falha de inicialização caso o CDN, WASM ou modelo não estejam acessíveis. Dependência de internet na primeira carga.

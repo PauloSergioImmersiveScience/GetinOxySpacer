@@ -8,6 +8,7 @@ const info = document.getElementById('poseInfo');
 
 const VERSION = '0.10.22';
 const PACKAGE = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${VERSION}`;
+const MODULE_URL = `${PACKAGE}/vision_bundle.mjs`; // Entrada ES Module oficial do pacote.
 const MODEL = 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task';
 const MIN_INTERVAL_MS = 65; // Reduz bloqueio da interface em máquinas mais lentas.
 const MIN_VISIBILITY = 0.35;
@@ -46,7 +47,7 @@ async function loadDetector() {
   setState('Baixando o MediaPipe e o modelo de pose (somente na primeira vez)...', 'Carregando');
   placeholder.textContent = 'Carregando modelo de detecção de pose...';
   detectorPromise = (async () => {
-    const { FilesetResolver, PoseLandmarker } = await import(PACKAGE);
+    const { FilesetResolver, PoseLandmarker } = await import(MODULE_URL);
     PoseLandmarkerClass = PoseLandmarker;
     const vision = await FilesetResolver.forVisionTasks(`${PACKAGE}/wasm`);
     const options = delegate => ({
@@ -69,7 +70,7 @@ async function loadDetector() {
     return detector;
   } catch (err) {
     detectorPromise = null;
-    setState('Não foi possível iniciar o MediaPipe. Verifique conexão e console.', 'Erro');
+    setState('Falha ao iniciar MediaPipe: ' + (err?.message || String(err)), 'Erro');
     clearPose('Falha ao carregar a detecção de pose.');
     console.error('Erro no MediaPipe:', err);
     throw err;
