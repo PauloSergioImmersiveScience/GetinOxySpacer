@@ -28,9 +28,6 @@ Aplicação estática para GitHub Pages: **não precisa de Python ou servidor pr
 
 **Repositório privado:** no GitHub Free, o GitHub Pages exige repositório **público**. Para Pages a partir de repositório privado, consulte disponibilidade dos planos GitHub Pro/Team/Enterprise. **Um repositório privado não torna necessariamente o site publicado privado.** Em geral o site Pages continua publicamente acessível. A publicação realmente privada do Pages requer políticas corporativas/Enterprise Cloud adequadas.
 
-## Aviso fundamental de segurança
-A senha que está em `app.js` é verificada **somente no navegador**. Ela serve apenas como barreira visual/demonstração: **qualquer visitante que receba o site pode inspecionar o código JavaScript, descobrir a senha e ignorar a tela de login**. Não coloque vídeos, dados pessoais, clínicos ou confidenciais no repositório ou na página. Para autenticação genuína, use um serviço com backend/autorização (por exemplo, autenticação + regras de acesso em um serviço hospedado) ou um ambiente com acesso protegido.
-
 ## Limites técnicos
 - A File System Access API exige navegador compatível, HTTPS e interação explícita. Firefox e Safari podem não suportar este fluxo de gravação direta.
 - O navegador **não pode escolher sozinho** o caminho `C:\Users\...`: o usuário precisa selecionar a pasta via botão.
