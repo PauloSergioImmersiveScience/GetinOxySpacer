@@ -28,18 +28,42 @@ async function selectDataset(){try{
  status(first<0?'Todos os vídeos desta pasta já foram analisados. Você pode selecionar outra pasta ou revisitar arquivos pelo botão Passo Anterior.':`Pasta carregada. ${state.done.size} vídeo(s) já analisado(s).`,'good');
  }catch(e){if(e.name==='AbortError')return;console.error(e);status(e.message||String(e),'bad');}}
 function nextPending(from){for(let i=from+1;i<state.videos.length;i++){if(!state.done.has(state.videos[i]))return i;}for(let i=0;i<=from;i++){if(!state.done.has(state.videos[i]))return i;}return -1;}
+const COMMENT_FIELDS = ['commentsGeneral', 'commentsPatient', 'videoRating', 'videoReason'];
+function clearComments(){for(const id of COMMENT_FIELDS)$(id).value='';}
+function enableComments(enabled){for(const id of COMMENT_FIELDS)$(id).disabled=!enabled;}
+function serializeComments(){
+ return [
+   '1) Comentários Gerais (à vontade):', $('commentsGeneral').value.trim(), '',
+   '2) Você diria algo para o paciente?', $('commentsPatient').value.trim(), '',
+   '3) Esse vídeo ficou bom, médio ou ruim? Por quê?',
+   'Avaliação: ' + ($('videoRating').value || 'Não informada'),
+   'Justificativa: ' + $('videoReason').value.trim()
+ ].join('\n') + '\n';
+}
+function loadComments(content){
+ clearComments();
+ if(!content.trim())return;
+ const pattern=/^1\) Comentários Gerais \(à vontade\):\r?\n([\s\S]*?)\r?\n\r?\n2\) Você diria algo para o paciente\?\r?\n([\s\S]*?)\r?\n\r?\n3\) Esse vídeo ficou bom, médio ou ruim\? Por quê\?\r?\nAvaliação: ([^\r\n]*)\r?\nJustificativa: ?([\s\S]*)$/;
+ const match=content.trimEnd().match(pattern);
+ if(!match){$('commentsGeneral').value=content;return;} // Compatível com TXT antigo, texto livre.
+ $('commentsGeneral').value=match[1].trim();
+ $('commentsPatient').value=match[2].trim();
+ $('videoRating').value=['Bom','Médio','Ruim'].includes(match[3].trim())?match[3].trim():'';
+ $('videoReason').value=match[4].trim();
+}
 async function showIndex(index,{remember=false}={}){
  const previous=state.current;if(remember&&previous>=0&&previous!==index)state.history.push(previous);
  $('player').pause();clearURL();state.current=index;
  const available=index>=0&&index<state.videos.length;
- $('previousBtn').disabled=!state.history.length;$('restartBtn').disabled=!available;$('playPauseBtn').disabled=!available;$('nextBtn').disabled=!available;$('saveBtn').disabled=!available;$('comments').disabled=!available;
+ $('previousBtn').disabled=!state.history.length;$('restartBtn').disabled=!available;$('playPauseBtn').disabled=!available;$('nextBtn').disabled=!available;$('saveBtn').disabled=!available;enableComments(available);
  $('player').style.display=available?'block':'none';$('playPauseBtn').textContent='▶ Reproduzir';$('videoPlaceholder').classList.toggle('hidden',available);
- if(!available){$('player').removeAttribute('src');$('player').load();$('filename').textContent='Nenhum vídeo pendente';$('position').textContent='—';$('comments').value='';$('savedTag').textContent='—';$('videoPlaceholder').textContent=state.videos.length?'Não há vídeos pendentes.':'Selecione um diretório para visualizar o primeiro vídeo pendente.';return;}
- const name=state.videos[index];$('filename').textContent=name;$('position').textContent=`${index+1} de ${state.videos.length}`;$('savedTag').textContent=state.done.has(name)?'Já analisado':'Não salvo';$('comments').value='Carregando comentário...';
- try{const file=await (await state.folder.getFileHandle(name)).getFile();if(state.current!==index)return;state.objectURL=URL.createObjectURL(file);$('player').src=state.objectURL;$('player').load();const comment=await getComment(name);if(state.current===index)$('comments').value=comment;}
- catch(e){console.error(e);status('Falha ao abrir '+name+': '+e.message,'bad');$('comments').value='';}
+ clearComments();
+ if(!available){$('player').removeAttribute('src');$('player').load();$('filename').textContent='Nenhum vídeo pendente';$('position').textContent='—';$('savedTag').textContent='—';$('videoPlaceholder').textContent=state.videos.length?'Não há vídeos pendentes.':'Selecione um diretório para visualizar o primeiro vídeo pendente.';return;}
+ const name=state.videos[index];$('filename').textContent=name;$('position').textContent=`${index+1} de ${state.videos.length}`;$('savedTag').textContent=state.done.has(name)?'Já analisado':'Não salvo';
+ try{const file=await (await state.folder.getFileHandle(name)).getFile();if(state.current!==index)return;state.objectURL=URL.createObjectURL(file);$('player').src=state.objectURL;$('player').load();const comment=await getComment(name);if(state.current===index)loadComments(comment);}
+ catch(e){console.error(e);status('Falha ao abrir '+name+': '+e.message,'bad');clearComments();}
 }
-async function saveComment(){if(state.current<0||!state.folder)return;const index=state.current;const name=state.videos[index];const content=$('comments').value;
+async function saveComment(){if(state.current<0||!state.folder)return;const index=state.current;const name=state.videos[index];const content=serializeComments();
  $('saveBtn').disabled=true;try{
  const dir=await state.folder.getDirectoryHandle(COMMENTS_DIR,{create:true});const file=await dir.getFileHandle(name+'.txt',{create:true});await writeText(file,content);
  state.done.add(name);await writeTracking();counters();$('savedTag').textContent='Salvo';status(`Comentário salvo em ${COMMENTS_DIR}/${name}.txt. Você pode editar e salvar novamente, ou seguir para o próximo vídeo.`,'good');

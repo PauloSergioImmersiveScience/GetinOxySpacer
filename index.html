@@ -20,7 +20,7 @@
         <p id="loginError" class="error" aria-live="polite"></p>
         <button class="btn primary full" type="submit">Entrar na plataforma</button>
       </form>
-      <small>Versão 04.3.1 · Acesso demonstrativo (não substitui autenticação segura)</small>
+      <small>Versão 04.4 · Acesso demonstrativo (não substitui autenticação segura)</small>
     </div>
   </section>
 
@@ -31,7 +31,7 @@
         <div>
           <p class="eyebrow">GETINOXY · ANÁLISE VISUAL</p>
           <h1>Analisador de Imagem GetinOxySpacer</h1>
-          <p>Plataforma para análise visual de vídeos do uso de espaçadores. <span>Versão: 04.3.1</span></p>
+          <p>Plataforma para análise visual de vídeos do uso de espaçadores. <span>Versão: 04.4</span></p>
         </div>
       </div>
       <button id="logoutBtn" class="btn subtle">Sair</button>
@@ -83,8 +83,27 @@
 
       <section class="panel comments-panel" aria-labelledby="commentTitle">
         <div class="section-heading"><div><p class="eyebrow">REGISTRO DA ANÁLISE</p><h2 id="commentTitle">Comentários</h2></div><span id="savedTag" class="tag">Não salvo</span></div>
-        <label class="sr-only" for="comments">Comentários sobre o vídeo</label>
-        <textarea id="comments" rows="6" placeholder="Digite aqui suas observações sobre o vídeo selecionado..." disabled></textarea>
+        <div class="comment-fields">
+          <div class="comment-field">
+            <label for="commentsGeneral">1) Comentários Gerais (à vontade):</label>
+            <textarea id="commentsGeneral" rows="4" placeholder="Escreva livremente suas observações sobre o vídeo..." disabled></textarea>
+          </div>
+          <div class="comment-field">
+            <label for="commentsPatient">2) Você diria algo para o paciente?</label>
+            <textarea id="commentsPatient" rows="3" placeholder="O que você gostaria de dizer ou orientar ao paciente?" disabled></textarea>
+          </div>
+          <div class="comment-field">
+            <label for="videoRating">3) Esse vídeo ficou bom, médio ou ruim? Por quê?</label>
+            <select id="videoRating" disabled>
+              <option value="">Selecione uma avaliação (opcional)</option>
+              <option value="Bom">Bom</option>
+              <option value="Médio">Médio</option>
+              <option value="Ruim">Ruim</option>
+            </select>
+            <label class="comment-sublabel" for="videoReason">Por quê?</label>
+            <textarea id="videoReason" rows="3" placeholder="Justifique a avaliação do vídeo..." disabled></textarea>
+          </div>
+        </div>
         <div class="comment-actions"><p>O comentário será salvo como <strong>Comentarios/NOME_DO_VIDEO.txt</strong>.</p><button id="saveBtn" class="btn primary" disabled>Enviar Comentário</button></div>
       </section>
       <footer>Arquivos e comentários permanecem na pasta local selecionada. Nada é enviado ao GitHub.</footer>

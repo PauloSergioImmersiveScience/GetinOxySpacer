@@ -16,3 +16,12 @@
 .video-actions{margin:14px 0 0;justify-content:flex-end}
 #poseTag{white-space:nowrap}
 @media(max-width:800px){.media-grid{grid-template-columns:1fr}.media-grid .video-wrap{height:min(56vw,440px);min-height:230px}}
+
+/* v04.4: três tópicos de avaliação independentes. */
+.comment-fields{display:grid;gap:18px}
+.comment-field{display:flex;flex-direction:column;gap:8px}
+.comment-field>label{font-size:15px;font-weight:700;color:#24445f}
+.comment-field>.comment-sublabel{font-size:13px;font-weight:600;color:#52677f;margin-top:2px}
+.comment-field textarea{min-height:90px}
+.comment-field select{width:100%;max-width:380px;min-height:44px;border:1px solid #cdd9e7;border-radius:10px;padding:10px 12px;color:#182b43;background:#fff;font:inherit}
+.comment-field select:disabled{background:#f2f5f9}

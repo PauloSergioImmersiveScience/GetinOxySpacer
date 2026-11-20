@@ -30,3 +30,7 @@ Após substituir os arquivos, use Ctrl+Shift+R. Em caso de falha, abra F12 > Con
 Ao selecionar um vídeo MP4, a janela **Articulações** já analisa e exibe o esqueleto sobre o **primeiro quadro parado**, antes de clicar em Reproduzir. A inicialização começa em `loadedmetadata` e espera que o quadro esteja decodificado (`HAVE_CURRENT_DATA`), até 10 segundos. O quadro inicial é detectado mesmo com `video.paused === true`. Permanecem os tratamentos de Play, Pause, busca temporal e troca de vídeo. O parâmetro `?v=043` no script evita reutilizar uma cópia antiga do `pose.js` do cache do navegador.
 
 Se a detecção do primeiro quadro não localizar uma pessoa (por oclusão ou enquadramento), o sistema mostra **Sem pose**. Isso não é necessariamente falha do MediaPipe.
+
+## Atualização v04.4 — Comentários estruturados
+
+A região de comentários agora contém três tópicos: comentários gerais, orientação ao paciente e avaliação do vídeo (Bom, Médio ou Ruim) acompanhada da justificativa. Todos são opcionais e salvos juntos no mesmo `Comentarios/NOME_DO_VIDEO.mp4.txt`, sobrescrevendo o registro anterior ao salvar novamente. Ao revisitar um vídeo analisado, os campos são recuperados. Arquivos TXT da versão antiga (comentário livre) são apresentados no primeiro campo para permitir edição e migração sem perda de conteúdo. O MediaPipe, o vídeo e os controles de navegação não foram modificados.
