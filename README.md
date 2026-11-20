@@ -34,3 +34,8 @@ Se a detecção do primeiro quadro não localizar uma pessoa (por oclusão ou en
 ## Atualização v04.4 — Comentários estruturados
 
 A região de comentários agora contém três tópicos: comentários gerais, orientação ao paciente e avaliação do vídeo (Bom, Médio ou Ruim) acompanhada da justificativa. Todos são opcionais e salvos juntos no mesmo `Comentarios/NOME_DO_VIDEO.mp4.txt`, sobrescrevendo o registro anterior ao salvar novamente. Ao revisitar um vídeo analisado, os campos são recuperados. Arquivos TXT da versão antiga (comentário livre) são apresentados no primeiro campo para permitir edição e migração sem perda de conteúdo. O MediaPipe, o vídeo e os controles de navegação não foram modificados.
+
+
+## Correção 04.4.1 — Cache e compatibilidade HTML/JS
+
+O erro `Cannot set properties of null (setting 'disabled')` pode ocorrer se o navegador combinar o HTML antigo com o JavaScript 04.4. Esta versão usa `app.js?v=0441` para invalidar o cache do script e apresenta mensagem clara caso os controles do formulário não existam no HTML carregado. **Substitua todos os arquivos juntos** no repositório e pressione Ctrl+Shift+R.

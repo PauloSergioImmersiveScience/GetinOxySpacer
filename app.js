@@ -30,7 +30,13 @@ async function selectDataset(){try{
 function nextPending(from){for(let i=from+1;i<state.videos.length;i++){if(!state.done.has(state.videos[i]))return i;}for(let i=0;i<=from;i++){if(!state.done.has(state.videos[i]))return i;}return -1;}
 const COMMENT_FIELDS = ['commentsGeneral', 'commentsPatient', 'videoRating', 'videoReason'];
 function clearComments(){for(const id of COMMENT_FIELDS)$(id).value='';}
-function enableComments(enabled){for(const id of COMMENT_FIELDS)$(id).disabled=!enabled;}
+function enableComments(enabled){
+  const missing = COMMENT_FIELDS.filter(id => !$(id));
+  if (missing.length) {
+    throw new Error('Interface desatualizada: campos de comentários não encontrados (' + missing.join(', ') + '). Atualize index.html e app.js juntos e recarregue com Ctrl+Shift+R.');
+  }
+  for (const id of COMMENT_FIELDS) $(id).disabled = !enabled;
+}
 function serializeComments(){
  return [
    '1) Comentários Gerais (à vontade):', $('commentsGeneral').value.trim(), '',
